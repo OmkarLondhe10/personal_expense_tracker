@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:provider/provider.dart';
 import 'core/widgets/main_navigation.dart';
 
 void main() {
@@ -10,21 +12,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Expense Tracker',
-      debugShowCheckedModeBanner: false,
-
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.indigo,
-        scaffoldBackgroundColor: Colors.grey[50],
-        appBarTheme: const AppBarTheme(
-          centerTitle: true,
-          elevation: 0,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> TransactionProvider())
+      ],
+      
+      child: MaterialApp(
+        title: 'Expense Tracker',
+        debugShowCheckedModeBanner: false,
+      
+        theme: ThemeData(
+          useMaterial3: true,
+          primarySwatch: Colors.indigo,
+          scaffoldBackgroundColor: Colors.grey[50],
+          appBarTheme: const AppBarTheme(
+            centerTitle: true,
+            elevation: 0,
+          ),
         ),
+      
+        home: const MainNavigation(),
       ),
-
-      home: const MainNavigation(),
     );
   }
 }

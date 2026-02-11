@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/models/transaction_model.dart';
+import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:provider/provider.dart';
 
 class AddTransactionScreen extends StatefulWidget {
-  const AddTransactionScreen({super.key});
+  final TransactionModel? transaction;
+  const AddTransactionScreen({super.key, this.transaction});
+
 
   @override
   State<AddTransactionScreen> createState() => _AddTransactionScreenState();
@@ -16,10 +21,26 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   DateTime selectedDate = DateTime.now();
 
   @override
+  void initState(){
+    super.initState();
+
+  final tx = widget.transaction;
+  if(tx != null){
+
+    _amountController.text = tx.amount.toString();
+    _noteController.text = tx.note;
+
+    isIncome = tx.isIncome;
+    category = tx.category;
+    selectedDate = tx.date;
+  }
+}
+  
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Transaction"),
+        title: Text(widget.transaction == null ? 'Add Transaction' :'Edit Transaction'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -78,13 +99,43 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
 
             SizedBox(
               width: 80,
-              child: ElevatedButton(onPressed: (){
-                Navigator.pop(context);
-              }, 
+              child: ElevatedButton(
+                onPressed: (){
+              final amount = double.tryParse(_amountController.text);
+              if (amount == null) return;
+            
+            if(widget.transaction == null ) {
+
+            final tx = TransactionModel(
+              id: DateTime.now().microsecondsSinceEpoch, 
+              amount: amount, 
+              category: category, 
+              date: selectedDate, 
+              note: _noteController.text, 
+              isIncome: isIncome
+                );
+              context.read<TransactionProvider>().addTransaction(tx);
+              Navigator.pop(context);
+              } 
+              else 
+              {
+                final updated = TransactionModel(
+                  id: widget.transaction!.id, 
+                  amount: amount, 
+                  category: category, 
+                  date: selectedDate, 
+                  note: _noteController.text, 
+                  isIncome: isIncome
+                  );
+              context.read<TransactionProvider>().updateTransaction(updated);
+              } 
+            if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        },
             child: Text("Save")
               ),
             )
-
           ],
         ),
       ),
