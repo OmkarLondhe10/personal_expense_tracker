@@ -6,7 +6,6 @@ final List<TransactionModel> _transactions = [];
 
   List<TransactionModel> get transactions => _transactions;
 
-
   void addTransaction(TransactionModel tx){
     _transactions.insert(0, tx);
     notifyListeners();

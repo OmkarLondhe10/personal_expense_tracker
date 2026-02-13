@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/core/navigation/app_router.dart';
+import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
 import 'package:personal_expense_tracker/provider/transaction_provider.dart';
 import 'package:provider/provider.dart';
-import 'core/widgets/main_navigation.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
+  setUrlStrategy(PathUrlStrategy());
   runApp(const MyApp());
 }
 
@@ -20,7 +23,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Expense Tracker',
         debugShowCheckedModeBanner: false,
-      
         theme: ThemeData(
           useMaterial3: true,
           primarySwatch: Colors.indigo,
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
             elevation: 0,
           ),
         ),
-      
-        home: const MainNavigation(),
+        initialRoute: AppRoutes.home,
+        onGenerateRoute: AppRouter.generate,
       ),
     );
   }

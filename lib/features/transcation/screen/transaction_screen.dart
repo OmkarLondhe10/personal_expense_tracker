@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
 import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
 import 'package:personal_expense_tracker/features/transcation/widget/transaction_tile.dart';
 import 'package:personal_expense_tracker/provider/transaction_provider.dart';
@@ -51,13 +52,11 @@ class TransactionScreen extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (_)=> AddTransactionScreen(),
-              ),
-            );
-          },
-          child: Icon(Icons.add),
-        ),
-      );
-    // );
+            Navigator.pushNamed(context, AppRoutes.addTransaction,
+              );
+            },
+        child: Icon(Icons.add),
+      ),
+    );
   }
 }

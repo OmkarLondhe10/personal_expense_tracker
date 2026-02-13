@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   final TransactionModel? transaction;
+
   const AddTransactionScreen({super.key, this.transaction});
 
 
@@ -46,7 +47,6 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
