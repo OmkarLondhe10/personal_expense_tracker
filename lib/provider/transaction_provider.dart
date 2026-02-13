@@ -22,4 +22,14 @@ final List<TransactionModel> _transactions = [];
       notifyListeners();
     }
   }
+
+  void insertAt(int index, TransactionModel tx) {
+    _transactions.insert(index, tx);
+    notifyListeners();
+  }
+
+  void deleteAt(int index) {
+    _transactions.removeAt(index);
+    notifyListeners();
+  }
 }
