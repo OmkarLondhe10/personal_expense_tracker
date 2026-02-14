@@ -60,4 +60,14 @@ Future<void> _save() async{
   final data = _transactions.map((e)=> e.toJson()).toList();
   await prefs.setStringList(_storagekey, data);
   }
+
+double get totalIncome => 
+  _transactions.where((t)=> t.isIncome).fold(0, (sum,t)=>sum+t.amount);
+
+double get totalExpense =>
+_transactions.where((t)=> !t.isIncome).fold(0, (sum,t)=> sum+t.amount);
+
+double get balance => totalIncome - totalExpense;
+
+List<TransactionModel> get recentTransactions => _transactions.take(10).toList();
 }

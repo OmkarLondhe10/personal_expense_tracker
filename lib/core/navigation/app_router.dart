@@ -6,7 +6,7 @@ import '../../core/widgets/main_navigation.dart';
 
 class AppRouter {
   static Route<dynamic> generate(RouteSettings settings) {
-  print('ROUTE REQUESTED: ${settings.name}');
+  // print('ROUTE REQUESTED: ${settings.name}');
     switch (settings.name) {
       case AppRoutes.home:
         return MaterialPageRoute(
