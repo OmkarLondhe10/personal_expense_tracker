@@ -70,4 +70,22 @@ _transactions.where((t)=> !t.isIncome).fold(0, (sum,t)=> sum+t.amount);
 double get balance => totalIncome - totalExpense;
 
 List<TransactionModel> get recentTransactions => _transactions.take(10).toList();
+
+  double _monthlyBudget = 0;
+
+  double get monthlyBudget => _monthlyBudget;
+
+  void setBudget(double value){
+    _monthlyBudget = value;
+    notifyListeners();
+    }
+
+  double get spent => totalExpense;
+
+  double get totalAvaliable => _monthlyBudget + totalIncome;
+
+  double get remaining => (_monthlyBudget + totalIncome - spent).clamp(0, totalAvaliable);
+
+  double get progress => _monthlyBudget == 0 ? 0 : (spent/_monthlyBudget).clamp(0, 1);
+
 }
