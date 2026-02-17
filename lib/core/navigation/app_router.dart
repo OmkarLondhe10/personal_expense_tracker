@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/features/auth/login_screen.dart';
+import 'package:personal_expense_tracker/features/auth/signup_screen.dart';
 import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app_routes.dart';
 import '../../core/widgets/main_navigation.dart';
 
 
 class AppRouter {
-  static Route<dynamic> generate(RouteSettings settings) {
-  // print('ROUTE REQUESTED: ${settings.name}');
+  static Future <Route> generate(RouteSettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    final loggedIn = prefs.getBool('loggedIn') ?? false ;
+
+    if (!loggedIn && settings.name != AppRoutes.login && settings.name != AppRoutes.signup){
+      return MaterialPageRoute(builder: (_)=> const LoginScreen());
+    }
     switch (settings.name) {
+    
       case AppRoutes.home:
         return MaterialPageRoute(
           builder: (_) => const MainNavigation(),
         );
+
+    case AppRoutes.signup:
+    return MaterialPageRoute(builder: (_)=> const SignupScreen());
+
+    case AppRoutes.login:
+    return MaterialPageRoute(builder: (_)=> const LoginScreen());
 
       case AppRoutes.addTransaction:
         final tx = settings.arguments;
