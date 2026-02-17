@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
     await prefs.setBool('loggedIn', true);
 
     Navigator.pushAndRemoveUntil(
-      context, MaterialPageRoute(builder: (_)=> const MainNavigation()
+      context, MaterialPageRoute(builder: (_)=> const MainNavigation(),
         ), 
       (route)=> false
     );

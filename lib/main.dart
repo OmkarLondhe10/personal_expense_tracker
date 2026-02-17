@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
+import 'package:personal_expense_tracker/core/widgets/main_navigation.dart';
 import 'package:personal_expense_tracker/features/auth/auth_gate.dart';
 import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 import 'package:personal_expense_tracker/features/auth/signup_screen.dart';
+import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
 import 'package:personal_expense_tracker/provider/transaction_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -39,11 +41,13 @@ class MyApp extends StatelessWidget {
             elevation: 0,
           ),
         ),
-        initialRoute: AppRoutes.home,
+        initialRoute: AppRoutes.login,
         home: const AuthGate(),
         routes: {
-          '\login':(_)=> const LoginScreen(),
-          '\signup':(_)=> const SignupScreen(),
+        AppRoutes.home: (_) => const MainNavigation(),
+        AppRoutes.login: (_) => const LoginScreen(),
+        AppRoutes.signup: (_) => const SignupScreen(),   
+        AppRoutes.addTransaction: (_)=> const AddTransactionScreen(),
         },
       ),
     );
