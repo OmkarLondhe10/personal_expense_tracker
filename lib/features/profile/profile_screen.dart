@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -60,10 +61,12 @@ class ProfileScreen extends StatelessWidget {
               backgroundColor: Colors.red,
             ),
             onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(context, '/login', (route)=> false);
             },
 
             icon: const Icon(Icons.logout),
             label: const Text('Logout'),
+            
           ),
         ],
       ),
