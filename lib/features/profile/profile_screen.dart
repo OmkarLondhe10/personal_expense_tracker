@@ -1,72 +1,92 @@
 import 'package:flutter/material.dart';
-// import 'package:personal_expense_tracker/features/auth/login_screen.dart';
+import 'package:provider/provider.dart';
+import '../../provider/app_settings_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<AppSettingsProvider>();
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-      ),
+      appBar: AppBar(title: const Text("Profile")),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Column(
-            children: const [
-              CircleAvatar(
-                radius: 40,
-                child: Icon(Icons.person, size: 40),
-              ),
-              SizedBox(height: 10),
-              Text(
-                'John Doe',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'john@example.com',
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
+          /// USER INFO
+          const CircleAvatar(
+            radius: 40,
+            child: Icon(Icons.person, size: 40),
+          ),
+          const SizedBox(height: 10),
+          const Center(
+            child: Text(
+              "John Doe",
+              style:
+                  TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          SwitchListTile(
+            value: settings.darkmode,
+            title: const Text("Dark Mode"),
+            secondary: const Icon(Icons.dark_mode),
+            onChanged: (value) {
+              settings.tottgleDarkMode(value);
+            },
+          ),
+
+          /// NOTIFICATIONS
+          SwitchListTile(
+            value: settings.notificationsEnabled,
+            title: const Text("Notifications"),
+            secondary: const Icon(Icons.notifications),
+            onChanged: (value) {
+              settings.toggleNotifications(value);
+            },
+          ),
+
+          const Divider(height: 30),
+
+          /// ABOUT
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text("About"),
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationName: "Expense Tracker",
+                applicationVersion: "1.0.0",
+                applicationLegalese: "© 2025 Your Company",
+              );
+            },
           ),
 
           const SizedBox(height: 30),
 
-          const ListTile(
-            leading: Icon(Icons.dark_mode),
-            title: Text('Dark Mode'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
-          ),
-
-          const ListTile(
-            leading: Icon(Icons.notifications),
-            title: Text('Notifications'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
-          ),
-
-          const ListTile(
-            leading: Icon(Icons.info),
-            title: Text('About'),
-            trailing: Icon(Icons.arrow_forward_ios, size: 16),
-          ),
-
-          const SizedBox(height: 30),
-
+          /// LOGOUT
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (route)=> false);
-            },
+            onPressed: () async {
+              final prefs =
+                  await SharedPreferences.getInstance();
+              await prefs.remove('loggedIn');
 
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
+            },
             icon: const Icon(Icons.logout),
-            label: const Text('Logout'),
-            
+            label: const Text("Logout"),
           ),
         ],
       ),

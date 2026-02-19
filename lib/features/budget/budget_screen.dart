@@ -2,16 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/provider/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
-class BudgetScreen extends StatelessWidget {
+class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
 
-  // final controller = TextEditingController(
-  //   text: budget == 0 '': budget.toString(),
-  // );
-  
+  @override
+  State<BudgetScreen> createState() => _BudgetScreenState();
+}
+
+class _BudgetScreenState extends State<BudgetScreen> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final budget =
+        context.read<TransactionProvider>().monthlyBudget;
+
+    _controller.text =
+        budget == 0 ? '' : budget.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     final provider = context.watch<TransactionProvider>();
 
     final budget = provider.monthlyBudget;
@@ -19,14 +32,12 @@ class BudgetScreen extends StatelessWidget {
     final remaining = provider.remaining;
     final progress = provider.progress;
 
-    final controller = TextEditingController(
-      text:  budget == 0 ? '' : budget.toString(),
-    );
+    final percentage = (progress * 100).toStringAsFixed(0);
 
     Color color;
-    if(progress<0.5){
+    if (progress < 0.5) {
       color = Colors.green;
-    } else if (progress < 0.8){
+    } else if (progress < 0.8) {
       color = Colors.orange;
     } else {
       color = Colors.red;
@@ -34,72 +45,118 @@ class BudgetScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Monthly Budget'),
+        title: const Text('Monthly Budget'),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// INPUT SECTION
             Row(
               children: [
                 Expanded(
                   child: TextField(
-                    controller: controller,
+                    controller: _controller,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: 'Set Monthly budget',
+                    decoration: const InputDecoration(
+                      labelText: 'Set Monthly Budget',
+                      border: OutlineInputBorder(),
                     ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    final amount =
+                        double.tryParse(_controller.text);
+                    if (amount != null) {
+                      context
+                          .read<TransactionProvider>()
+                          .setBudget(amount);
+
+                      FocusScope.of(context).unfocus();
+                    }
+                  },
+                  child: const Text('Set'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 30),
+
+            /// PROGRESS SECTION
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "$percentage% used",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: progress,
+                    minHeight: 14,
+                    color: color,
+                    backgroundColor: Colors.grey.shade300,
                   ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 10),
-                        
-            ElevatedButton(
-              onPressed: (){
-              final amount = double.tryParse(controller.text);
-              if (amount != null){
-                context.read<TransactionProvider>().setBudget(amount);
-              }
-              // FocusScope.of(context).unfocus();
-            }, child: Text('Set')),
+            const SizedBox(height: 30),
 
-            const SizedBox(height: 20),
-                        
-            LinearProgressIndicator(
-              value: progress,
-              minHeight: 12,
-              color: color,
-              backgroundColor: Colors.grey.shade300,
-            ),
-                        
-            const SizedBox(height: 20),
-                        
+            /// INFO CARD
             Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
                   children: [
-                    Text('Budget:\$${budget.toStringAsFixed(2)}'),
-                    SizedBox(height: 6),
-                    Text('Income:\$${provider.totalIncome.toStringAsFixed(2)}'),
-                    SizedBox(height: 6),
-                    Text('Spent: \$${spent.toStringAsFixed(2)}'),
-                    SizedBox(height: 6),
-                    Text('Remaining: \$${remaining.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    _infoRow("Budget", budget),
+                    _infoRow(
+                        "Income", provider.totalIncome),
+                    _infoRow("Spent", spent),
+                    const Divider(height: 20),
+                    _infoRow("Remaining", remaining,
+                        bold: true),
                   ],
                 ),
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, double value,
+      {bool bold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label),
+          Text(
+            "\$${value.toStringAsFixed(2)}",
+            style: TextStyle(
+              fontWeight:
+                  bold ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
       ),
     );
   }
