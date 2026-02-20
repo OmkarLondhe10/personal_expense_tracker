@@ -40,17 +40,6 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
 
-          SwitchListTile(
-            value: settings.notificationsEnabled,
-            title: const Text("Notifications"),
-            secondary: const Icon(Icons.notifications),
-            onChanged: (value) {
-              settings.toggleNotifications(value);
-            },
-          ),
-
-          const Divider(height: 30),
-
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text("About"),
@@ -68,7 +57,7 @@ class ProfileScreen extends StatelessWidget {
 
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () async {
               final prefs =
