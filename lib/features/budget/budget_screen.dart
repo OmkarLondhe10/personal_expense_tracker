@@ -36,11 +36,11 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
     Color color;
     if (progress < 0.5) {
-      color = Colors.green;
+      color = Theme.of(context).colorScheme.primary;
     } else if (progress < 0.8) {
-      color = Colors.orange;
+      color = Theme.of(context).colorScheme.tertiaryContainer;
     } else {
-      color = Colors.red;
+      color = Theme.of(context).colorScheme.error;
     }
 
     return Scaffold(
@@ -52,7 +52,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            /// INPUT SECTION
+
             Row(
               children: [
                 Expanded(
@@ -66,6 +66,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                 ),
                 const SizedBox(width: 10),
+
                 ElevatedButton(
                   onPressed: () {
                     final amount =
@@ -74,10 +75,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       context
                           .read<TransactionProvider>()
                           .setBudget(amount);
-
                       FocusScope.of(context).unfocus();
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                  ),
                   child: const Text('Set'),
                 ),
               ],
@@ -85,7 +88,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
             const SizedBox(height: 30),
 
-            /// PROGRESS SECTION
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -97,13 +99,14 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
+
                 ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 14,
                     color: color,
-                    backgroundColor: Colors.grey.shade300,
+                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
               ],
@@ -111,7 +114,6 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
             const SizedBox(height: 30),
 
-            /// INFO CARD
             Card(
               elevation: 3,
               shape: RoundedRectangleBorder(

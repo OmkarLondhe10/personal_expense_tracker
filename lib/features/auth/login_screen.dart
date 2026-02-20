@@ -20,7 +20,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final password = passwordcontroller.text.trim();
 
     if(username.isEmpty || password .isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Enter the data'))
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Enter the data'))
       );
       return;
     }
@@ -54,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
             controller: usernamecontroller,
             decoration: InputDecoration(
               labelText: 'Username',
+              hintStyle: TextStyle(),
               border: OutlineInputBorder(),
             ),
           ),
@@ -70,7 +73,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
           const SizedBox(height: 16),
 
-          ElevatedButton(onPressed: _loginSubmitted, child: const Text('Login')
+          ElevatedButton(
+            onPressed: _loginSubmitted,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+              Theme.of(context).colorScheme.tertiary,
+              ),
+            ), 
+            child: const Text('Login'),
           ),
 
           const SizedBox(height: 16),

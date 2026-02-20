@@ -16,7 +16,7 @@ class ProfileScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          /// USER INFO
+
           const CircleAvatar(
             radius: 40,
             child: Icon(Icons.person, size: 40),
@@ -40,7 +40,6 @@ class ProfileScreen extends StatelessWidget {
             },
           ),
 
-          /// NOTIFICATIONS
           SwitchListTile(
             value: settings.notificationsEnabled,
             title: const Text("Notifications"),
@@ -52,7 +51,6 @@ class ProfileScreen extends StatelessWidget {
 
           const Divider(height: 30),
 
-          /// ABOUT
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text("About"),
@@ -68,7 +66,6 @@ class ProfileScreen extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          /// LOGOUT
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,

@@ -18,21 +18,26 @@ class DashboardScreen extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text("Dashoard"),
+        title: Text("Dashboard"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             Card(
               child: Padding(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
-                    const Text("Balance", style: TextStyle(color: Colors.grey),
+                    Text("Balance", 
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.w500,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    Text('\$${balance.toStringAsFixed(2)}',style: TextStyle(
+                    Text('\$${balance.toStringAsFixed(2)}',
+                    style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       ),
@@ -46,9 +51,10 @@ class DashboardScreen extends StatelessWidget {
 
           Row(
             children: [
-              Expanded(child: 
+              Expanded(
+                child: 
                 Card(
-                  color: Colors.green.shade50,
+                  color: Theme.of(context).colorScheme.secondaryFixed,
                   child: Padding(
                     padding: EdgeInsets.all(16),
                   child: Column(
@@ -57,7 +63,7 @@ class DashboardScreen extends StatelessWidget {
                       SizedBox(height: 6),
                       Text('\$${income.toStringAsFixed(2)}',
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -71,7 +77,7 @@ class DashboardScreen extends StatelessWidget {
 
               Expanded(
                 child: Card(
-                  color: Colors.red.shade50,
+                  color: Theme.of(context).colorScheme.errorContainer,
                   child: Padding(padding: EdgeInsets.all(16),
                     child: Column(
                       children: [
@@ -80,7 +86,7 @@ class DashboardScreen extends StatelessWidget {
                         Text(
                           '\$${expense.toStringAsFixed(2)}',
                           style: TextStyle(
-                            color: Colors.red,
+                            color: Theme.of(context).colorScheme.error,
                             fontWeight: FontWeight.bold,
                               ),
                           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -13,18 +14,27 @@ class _SignupScreenState extends State<SignupScreen> {
   final emailcontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
 
-  void signup(){
-    final name = namecontroller.text.trim();
-    final email = emailcontroller.text.trim();
-    final password = passwordcontroller.text.trim();
+      void signup() {
+        final name = namecontroller.text.trim();
+        final email = emailcontroller.text.trim();
+        final password = passwordcontroller.text.trim();
 
-    if(name.isEmpty || email.isEmpty || password.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please fill all the fields')));
-      return;
-    }
-  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Signup Successfull')));
-  }
-
+        if (name.isEmpty || email.isEmpty || password.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Please fill all the fields')),
+          );
+          return;
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Signup Successful')),
+        );
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+        );
+      }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +53,12 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: namecontroller,
               decoration: InputDecoration(
                 labelText: 'Full Name',
-                border: OutlineInputBorder(),
+                fillColor: Colors.transparent,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.shadow,            
+                  )
+                )
               ),
             ),
 
@@ -53,7 +68,11 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: emailcontroller,
               decoration: InputDecoration(
                 labelText: 'Email',
-                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.shadow,
+                  )
+                ),
               ),
             ),
 
@@ -63,14 +82,25 @@ class _SignupScreenState extends State<SignupScreen> {
               controller: passwordcontroller,
               decoration: InputDecoration(
                 labelText: 'Password',
-                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.shadow,
+                  )
+                ),
               ),
             ),
 
             const SizedBox(height: 20),
 
-            ElevatedButton(onPressed: signup, child: Text('SIgnup'))
-
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+              onPressed: signup, 
+              child: Text('Signup'),
+            ),
           ],
         ),
         ),
