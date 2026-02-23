@@ -15,7 +15,8 @@ class AddTransactionScreen extends StatefulWidget {
 
 class _AddTransactionScreenState extends State<AddTransactionScreen> {
   final _amountController = TextEditingController();
-  final _noteController = TextEditingController();
+  late List <String> categories;
+
   
   bool isIncome = false;
   String category = 'Food';
@@ -25,11 +26,25 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   void initState(){
     super.initState();
 
+    categories = [
+      'Food',
+      'Transport',
+      'Bills',
+      'Shopping',
+      'Other',
+    ];
+
   final tx = widget.transaction;
-  if(tx != null){
+
+  if(tx != null){{
+    category = tx.category;
+
+    if(!categories.contains(category)){
+      categories.add(category);
+    }
+  }
 
     _amountController.text = tx.amount.toString();
-    _noteController.text = tx.note;
 
     isIncome = tx.isIncome;
     category = tx.category;
@@ -50,11 +65,25 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
+              cursorColor: Theme.of(context).colorScheme.shadow,
               decoration: InputDecoration(
-                labelText: 'Amount'
+                hintText: 'Amount',
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 12,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
               ),
             ),
-
             const SizedBox(height: 10),
 
           SwitchListTile(
@@ -70,37 +99,51 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             
             const SizedBox(height: 10),
 
-          DropdownButtonFormField(
+          DropdownButtonFormField<String>(
             value: category,
-            items: const[
-              DropdownMenuItem( value: 'Food', child: Text("Food")),
-              DropdownMenuItem( value: 'Transport', child: Text("Transport")),
-              DropdownMenuItem( value: 'Bills', child: Text("Bills")),
-              DropdownMenuItem( value: 'Shopping', child: Text("Shopping")),
-              DropdownMenuItem( value: 'Other', child: Text("Other")),
-            ], 
-            onChanged: (value){
-              setState(() {
-                category = value!;
-                });
+            items: categories.map((cat){
+              return DropdownMenuItem<String>(
+                value: cat,
+                child: Text(cat),
+              );
+            }).toList(), 
+            onChanged: (value) async{
+              if (value == 'Other'){
+                final customCategory = await _showCategoryDialog();
+
+                if(customCategory != null && customCategory.isNotEmpty){
+                  setState(() {
+                    if(!categories.contains(customCategory)){
+                      categories.insert(
+                        0, customCategory,
+                      );
+                    }
+                    category = customCategory;
+                  });
+                }
+                else {
+                  setState(() {
+                    category = value!;
+                  });
+                }
               }
-            ),
+            } 
+          ),
+
 
             const SizedBox(height: 10),
-
-            TextField(
-              controller: _noteController,
-              decoration: InputDecoration(
-                labelText: 'Note',
-              ),
-            ),
 
             const Spacer(),
 
             SizedBox(
               width: 80,
               child: ElevatedButton(
-                onPressed: (){
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+            onPressed: (){
               final amount = double.tryParse(_amountController.text);
               if (amount == null) return;
             
@@ -111,9 +154,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
               amount: amount, 
               category: category, 
               date: selectedDate, 
-              note: _noteController.text, 
+
               isIncome: isIncome
-                );
+            );
               context.read<TransactionProvider>().addTransaction(tx);
               Navigator.pop(context);
               } 
@@ -124,7 +167,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                   amount: amount, 
                   category: category, 
                   date: selectedDate, 
-                  note: _noteController.text, 
+
                   isIncome: isIncome
                   );
               context.read<TransactionProvider>().updateTransaction(updated);
@@ -139,6 +182,41 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           ],
         ),
       ),
+    );
+  }
+  
+  Future<String?> _showCategoryDialog() async {
+    final controller = TextEditingController();
+
+    return showDialog<String>(
+      context: context, 
+      builder: (context){
+        return AlertDialog(
+          title: const Text('Enter Custom Category'),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'E.g: Salary, Freelance, Gift',
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: ()=> Navigator.pop(context), 
+            child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+              onPressed: (){
+              Navigator.pop(context,controller.text);
+            }, 
+            child: const Text('Save')
+            ),
+          ],
+        );
+      }
     );
   }
 }

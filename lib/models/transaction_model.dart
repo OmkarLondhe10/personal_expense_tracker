@@ -5,7 +5,6 @@ class TransactionModel {
   final double amount;
   final String category;
   final DateTime date;
-  final String note;
   final bool isIncome;
 
   TransactionModel({
@@ -13,7 +12,6 @@ class TransactionModel {
     required this.amount, 
     required this.category, 
     required this.date, 
-    required this.note, 
     required this.isIncome
     });
 
@@ -23,7 +21,6 @@ Map<String, dynamic> toMap(){
     'amount':amount,
     'category': category,
     'date': date.toIso8601String(),
-    'note': note,
     'isIncome': isIncome,
   };
 }
@@ -34,7 +31,6 @@ factory TransactionModel.fromMap(Map<String, dynamic> map) {
     amount: (map['amount'] ?? 0).toDouble(),
     category: map['category'] ?? '',
     date: DateTime.tryParse(map['date'] ?? '') ?? DateTime.now(),
-    note: map['note'] ?? '',
     isIncome: map['isIncome'] ?? false,
   );
 }

@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppSettingsProvider extends ChangeNotifier{
   bool _darkmode = false;
 
-
   bool get darkmode => _darkmode;
 
   AppSettingsProvider(){
@@ -17,7 +16,7 @@ class AppSettingsProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  Future <void> tottgleDarkMode (bool value) async {
+  Future <void> tottgleDarkMode (bool value)  async {
     _darkmode = value;
     notifyListeners();
   }
