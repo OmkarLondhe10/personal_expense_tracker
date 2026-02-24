@@ -54,22 +54,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
           TextField(
             controller: usernamecontroller,
+            cursorColor: Theme.of(context).colorScheme.shadow,
             decoration: InputDecoration(
-              labelText: 'Username',
-              hintStyle: TextStyle(),
-              border: OutlineInputBorder(),
+              hintText: 'Username',
+            focusedBorder: OutlineInputBorder(),
             ),
           ),
 
           const SizedBox(height: 14),
 
-          TextField(
-            controller: passwordcontroller,
-            decoration: InputDecoration(
-              labelText: 'Password',
-              border: OutlineInputBorder(),
+            TextField(
+              controller: passwordcontroller,
+              keyboardType: TextInputType.number,
+              cursorColor: Theme.of(context).colorScheme.shadow,
+              decoration: InputDecoration(
+                hintText: 'Password',
+              focusedBorder: OutlineInputBorder(),
+              ),
             ),
-          ),
 
           const SizedBox(height: 16),
 

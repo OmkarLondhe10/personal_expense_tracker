@@ -51,12 +51,12 @@ class _SignupScreenState extends State<SignupScreen> {
 
             TextField(
               controller: namecontroller,
+              cursorColor: Theme.of(context).colorScheme.shadow,
               decoration: InputDecoration(
-                labelText: 'Full Name',
-                fillColor: Colors.transparent,
+                hintText: 'Full Name',
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.shadow,            
+                    color: Theme.of(context).colorScheme.shadow
                   )
                 )
               ),
@@ -66,8 +66,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
             TextField(
               controller: emailcontroller,
+              cursorColor: Theme.of(context).colorScheme.shadow,
               decoration: InputDecoration(
-                labelText: 'Email',
+                hintText: 'Email',
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.shadow,
@@ -80,8 +81,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
             TextField(
               controller: passwordcontroller,
+              cursorColor: Theme.of(context).colorScheme.shadow,
               decoration: InputDecoration(
-                labelText: 'Password',
+                hintText: 'Password',
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                     color: Theme.of(context).colorScheme.shadow,

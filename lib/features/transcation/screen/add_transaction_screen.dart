@@ -84,7 +84,9 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 10),
+
+
+          const SizedBox(height: 10),
 
           SwitchListTile(
             value: isIncome, 
@@ -195,6 +197,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
           title: const Text('Enter Custom Category'),
           content: TextField(
             controller: controller,
+            cursorColor: Theme.of(context).colorScheme.shadow,
             decoration: const InputDecoration(
               hintText: 'E.g: Salary, Freelance, Gift',
             ),
