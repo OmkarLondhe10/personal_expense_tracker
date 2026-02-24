@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
 import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -100,9 +101,21 @@ class _SignupScreenState extends State<SignupScreen> {
                   Theme.of(context).colorScheme.tertiary,
                 ),
               ),
-              onPressed: signup, 
+              onPressed: signup,
               child: Text('Signup'),
             ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Alredy have a accout?"),
+              TextButton(onPressed: (){
+                Navigator.pushNamed(context, AppRoutes.login);
+                }, child: Text('Login')
+                ),
+              ],
+            ),
+
           ],
         ),
         ),

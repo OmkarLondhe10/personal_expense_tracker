@@ -94,12 +94,12 @@ class _LoginScreenState extends State<LoginScreen> {
               TextButton(onPressed: (){
                 Navigator.pushNamed(context, AppRoutes.signup);
                 }, child: Text('Sign Up')
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
           ],
         ),
-        ),
+      ),
     );
   }
 }

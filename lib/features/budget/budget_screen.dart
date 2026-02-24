@@ -59,8 +59,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   child: TextField(
                     controller: _controller,
                     keyboardType: TextInputType.number,
+                    cursorColor: Theme.of(context).colorScheme.shadow,
                     decoration: const InputDecoration(
-                      labelText: 'Set Monthly Budget',
+                      hintText: 'Set Monthly Budget',
                       border: OutlineInputBorder(),
                     ),
                   ),
