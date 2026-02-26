@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/features/budget/budget_screen.dart';
 import 'package:personal_expense_tracker/features/dashboard/dashboard_screen.dart';
 import 'package:personal_expense_tracker/features/profile/profile_screen.dart';
-import 'package:personal_expense_tracker/features/transcation/screen/transaction_screen.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/screen/transaction_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});

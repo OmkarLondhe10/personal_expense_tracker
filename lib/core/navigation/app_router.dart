@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 import 'package:personal_expense_tracker/features/auth/signup_screen.dart';
-import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/screen/add_transaction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_routes.dart';
 import '../../core/widgets/main_navigation.dart';

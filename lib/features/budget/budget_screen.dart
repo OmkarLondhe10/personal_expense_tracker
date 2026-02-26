@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
 class BudgetScreen extends StatefulWidget {

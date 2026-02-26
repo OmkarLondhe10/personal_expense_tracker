@@ -1,23 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
-import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
-import 'package:personal_expense_tracker/core/widgets/main_navigation.dart' show MainNavigation;
-import 'package:personal_expense_tracker/features/auth/auth_gate.dart';
-import 'package:personal_expense_tracker/features/auth/login_screen.dart';
-import 'package:personal_expense_tracker/features/auth/signup_screen.dart';
-import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
-import 'package:personal_expense_tracker/provider/app_settings_provider.dart';
-import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/domain/usecases/add_transaction.dart';
+import 'package:personal_expense_tracker/features/transaction/domain/usecases/delete_transaction.dart';
+import 'package:personal_expense_tracker/features/transaction/domain/usecases/get_transaction.dart';
+import 'package:personal_expense_tracker/features/transaction/domain/usecases/update_transaction.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/app_settings_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/screen/add_transaction_screen.dart';
 import 'package:provider/provider.dart';
+
+import 'core/navigation/app_routes.dart';
+import 'core/widgets/main_navigation.dart';
 import 'core/theme/app_theme.dart';
+
+import 'features/auth/auth_gate.dart';
+import 'features/auth/login_screen.dart';
+import 'features/auth/signup_screen.dart';
+
+import 'features/transaction/data/datasources/transaction_local_datasource.dart';
+import 'features/transaction/data/repositories/transaction_repository_impl.dart';
+
 
 void main() {
   setUrlStrategy(PathUrlStrategy());
+
+  /// 🔥 DATA LAYER
+  final localDataSource = TransactionLocalDatasourceImpl();
+  final repository = TransactionRepositoryImpl(localDataSource);
+
+  /// 🔥 USE CASES
+  final addTransactionUseCase = AddTransaction(repository);
+  final getTransactionsUseCase = GetTransaction(repository);
+  final deleteTransactionUseCase = DeleteTransaction(repository);
+  final updateTransactionUseCase = UpdateTransaction(repository);
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => TransactionProvider(),
+          create: (_) => TransactionProvider(
+            addTransactionUseCase: addTransactionUseCase,
+            getTransactionsUseCase: getTransactionsUseCase,
+            deleteTransactionUseCase: deleteTransactionUseCase,
+            updateTransactionUsecase: updateTransactionUseCase,
+          )..load(),
         ),
         ChangeNotifierProvider(
           create: (_) => AppSettingsProvider(),

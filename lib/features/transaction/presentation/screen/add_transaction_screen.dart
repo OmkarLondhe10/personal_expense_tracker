@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/models/transaction_model.dart';
-import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/domain/entities/transaction.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
 
+
 class AddTransactionScreen extends StatefulWidget {
-  final TransactionModel? transaction;
+  final Transaction? transaction;
 
   const AddTransactionScreen({super.key, this.transaction});
 
@@ -151,28 +152,20 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
             
             if(widget.transaction == null ) {
 
-            final tx = TransactionModel(
-              id: DateTime.now().microsecondsSinceEpoch, 
+            final tx = Transaction(
+              id: DateTime.now().microsecondsSinceEpoch,
               amount: amount, 
               category: category, 
               date: selectedDate, 
 
-              isIncome: isIncome
+              isIncome: isIncome,
             );
-              context.read<TransactionProvider>().addTransaction(tx);
+              context.read<TransactionProvider>().add(tx);
               Navigator.pop(context);
               } 
               else 
               {
-                final updated = TransactionModel(
-                  id: widget.transaction!.id, 
-                  amount: amount, 
-                  category: category, 
-                  date: selectedDate, 
-
-                  isIncome: isIncome
-                  );
-              context.read<TransactionProvider>().updateTransaction(updated);
+              context.read<TransactionProvider>().load();
               } 
             if (Navigator.canPop(context)) {
             Navigator.pop(context);

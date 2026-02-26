@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/features/transcation/screen/add_transaction_screen.dart';
-import 'package:personal_expense_tracker/features/transcation/widget/transaction_tile.dart';
-import 'package:personal_expense_tracker/provider/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/screen/add_transaction_screen.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/widget/transaction_tile.dart';
 import 'package:provider/provider.dart';
 
 class TransactionScreen extends StatelessWidget {
@@ -22,7 +22,7 @@ class TransactionScreen extends StatelessWidget {
           ? _buildEmptyState(context)
           : RefreshIndicator(
               onRefresh: () async {
-                await Future.delayed(const Duration(milliseconds: 500));
+                await provider.load();
               },
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(vertical: 8),
@@ -32,12 +32,11 @@ class TransactionScreen extends StatelessWidget {
 
                   return Padding(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                     child: Dismissible(
                       key: ValueKey(tx.id),
                       direction: DismissDirection.endToStart,
 
-                      /// DELETE BACKGROUND
                       background: Container(
                         decoration: BoxDecoration(
                           color: Colors.red.shade400,
@@ -59,7 +58,8 @@ class TransactionScreen extends StatelessWidget {
                           builder: (ctx) => AlertDialog(
                             title: const Text("Delete Transaction?"),
                             content: const Text(
-                                "This action cannot be undone."),
+                                "This action cannot be undone."
+                          ),
                             actions: [
                               TextButton(
                                 onPressed: () =>
@@ -80,27 +80,26 @@ class TransactionScreen extends StatelessWidget {
                         );
                       },
 
-                      onDismissed: (_) {
+                      onDismissed: (_) async {
                         final removedTx = tx;
-                        final removedIndex = index;
                         final provider =
                             context.read<TransactionProvider>();
 
-                        provider.deleteAt(index);
+                        await provider.delete(index);
 
                         ScaffoldMessenger.of(context)
-                            .clearSnackBars();
+                          .clearSnackBars();
+
                         ScaffoldMessenger.of(context)
-                            .showSnackBar(
+                          .showSnackBar(
                           SnackBar(
                             content:
                                 const Text("Transaction deleted"),
                             behavior: SnackBarBehavior.floating,
                             action: SnackBarAction(
                               label: "UNDO",
-                              onPressed: () {
-                                provider.insertAt(
-                                    removedIndex, removedTx);
+                              onPressed: () async {
+                                await provider.add(removedTx);
                               },
                             ),
                           ),
