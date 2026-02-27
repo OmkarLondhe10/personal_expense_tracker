@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'package:personal_expense_tracker/features/budget/presentation/provider/budget_provider.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
 
 class BudgetScreen extends StatefulWidget {
   const BudgetScreen({super.key});
@@ -17,7 +19,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     super.didChangeDependencies();
 
     final budget =
-        context.read<TransactionProvider>().monthlyBudget;
+        context.read<BudgetProvider>().monthlyBudget;
 
     _controller.text =
         budget == 0 ? '' : budget.toString();
@@ -25,20 +27,34 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<TransactionProvider>();
 
-    final budget = provider.monthlyBudget;
-    final spent = provider.spent;
-    final remaining = provider.remaining;
-    final progress = provider.progress;
+    final transactionProvider =
+        context.watch<TransactionProvider>();
 
-    final percentage = (progress * 100).toStringAsFixed(0);
+    final budgetProvider =
+        context.watch<BudgetProvider>();
+
+    final budget = budgetProvider.monthlyBudget;
+    final spent = transactionProvider.totalExpense;
+
+    final remaining = budgetProvider.calculateRemaining(
+      income: transactionProvider.totalIncome,
+      expense: spent,
+    );
+
+    final progress =
+        budgetProvider.calculateProgress(spent);
+
+    final percentage =
+        (progress * 100).toStringAsFixed(0);
 
     Color color;
     if (progress < 0.5) {
       color = Theme.of(context).colorScheme.primary;
     } else if (progress < 0.8) {
-      color = Theme.of(context).colorScheme.tertiaryContainer;
+      color = Theme.of(context)
+          .colorScheme
+          .tertiaryContainer;
     } else {
       color = Theme.of(context).colorScheme.error;
     }
@@ -58,8 +74,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    keyboardType: TextInputType.number,
-                    cursorColor: Theme.of(context).colorScheme.shadow,
+                    keyboardType:
+                        TextInputType.number,
                     decoration: const InputDecoration(
                       hintText: 'Set Monthly Budget',
                       border: OutlineInputBorder(),
@@ -71,17 +87,18 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 ElevatedButton(
                   onPressed: () {
                     final amount =
-                        double.tryParse(_controller.text);
+                        double.tryParse(
+                            _controller.text);
+
                     if (amount != null) {
                       context
-                          .read<TransactionProvider>()
+                          .read<BudgetProvider>()
                           .setBudget(amount);
-                      FocusScope.of(context).unfocus();
+
+                      FocusScope.of(context)
+                          .unfocus();
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                  ),
                   child: const Text('Set'),
                 ),
               ],
@@ -90,7 +107,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
             const SizedBox(height: 30),
 
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   "$percentage% used",
@@ -102,12 +120,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 const SizedBox(height: 8),
 
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius:
+                      BorderRadius.circular(10),
                   child: LinearProgressIndicator(
                     value: progress,
                     minHeight: 14,
                     color: color,
-                    backgroundColor: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
               ],
@@ -118,20 +136,26 @@ class _BudgetScreenState extends State<BudgetScreen> {
             Card(
               elevation: 3,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius:
+                    BorderRadius.circular(12),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(20),
+                padding:
+                    const EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment:
                       CrossAxisAlignment.start,
                   children: [
                     _infoRow("Budget", budget),
                     _infoRow(
-                        "Income", provider.totalIncome),
+                        "Income",
+                        transactionProvider
+                            .totalIncome),
                     _infoRow("Spent", spent),
                     const Divider(height: 20),
-                    _infoRow("Remaining", remaining,
+                    _infoRow(
+                        "Remaining",
+                        remaining,
                         bold: true),
                   ],
                 ),
@@ -146,7 +170,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
   Widget _infoRow(String label, double value,
       {bool bold = false}) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding:
+          const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         mainAxisAlignment:
             MainAxisAlignment.spaceBetween,
@@ -155,8 +180,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
           Text(
             "\$${value.toStringAsFixed(2)}",
             style: TextStyle(
-              fontWeight:
-                  bold ? FontWeight.bold : FontWeight.normal,
+              fontWeight: bold
+                  ? FontWeight.bold
+                  : FontWeight.normal,
             ),
           ),
         ],

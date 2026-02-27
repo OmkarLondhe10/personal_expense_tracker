@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:personal_expense_tracker/features/budget/data/datasource/budget_local_datasource.dart';
+import 'package:personal_expense_tracker/features/budget/data/repositories/budget_repository_impl.dart';
+import 'package:personal_expense_tracker/features/budget/domain/usecase/get_budget.dart';
+import 'package:personal_expense_tracker/features/budget/domain/usecase/set_budget.dart';
+import 'package:personal_expense_tracker/features/budget/presentation/provider/budget_provider.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/add_transaction.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/delete_transaction.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/get_transaction.dart';
@@ -24,15 +29,18 @@ import 'features/transaction/data/repositories/transaction_repository_impl.dart'
 void main() {
   setUrlStrategy(PathUrlStrategy());
 
-  /// 🔥 DATA LAYER
   final localDataSource = TransactionLocalDatasourceImpl();
   final repository = TransactionRepositoryImpl(localDataSource);
 
-  /// 🔥 USE CASES
   final addTransactionUseCase = AddTransaction(repository);
   final getTransactionsUseCase = GetTransaction(repository);
   final deleteTransactionUseCase = DeleteTransaction(repository);
   final updateTransactionUseCase = UpdateTransaction(repository);
+
+  final BudgetLocalDatasource = BudgetLocalDatasourceImpl();
+  final BudgetRepository = BudgetRepositoryImpl(BudgetLocalDatasource);
+  final getBudgetUseCase = GetBudget(BudgetRepository);
+  final setBudgetUseCase = SetBudget(BudgetRepository);
 
   runApp(
     MultiProvider(
@@ -45,6 +53,14 @@ void main() {
             updateTransactionUsecase: updateTransactionUseCase,
           )..load(),
         ),
+
+        ChangeNotifierProvider(
+          create: (_)=> BudgetProvider(
+            getBudgetUseCase: getBudgetUseCase, 
+            setBudgetUseCase: setBudgetUseCase
+          ),
+        ),
+
         ChangeNotifierProvider(
           create: (_) => AppSettingsProvider(),
         ),

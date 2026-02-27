@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/features/transaction/presentation/screen/add_transaction_screen.dart';
 import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
-import 'package:personal_expense_tracker/features/transaction/widget/transaction_tile.dart';
+import 'package:personal_expense_tracker/features/transaction/presentation/widget/transaction_tile.dart';
 import 'package:provider/provider.dart';
 
 class TransactionScreen extends StatelessWidget {
