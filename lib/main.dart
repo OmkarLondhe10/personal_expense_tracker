@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:personal_expense_tracker/features/auth/data/datasource/auth_local_datasource.dart';
+import 'package:personal_expense_tracker/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:personal_expense_tracker/features/auth/domain/usecase/get_current_user.dart';
+import 'package:personal_expense_tracker/features/auth/domain/usecase/login_user.dart';
+import 'package:personal_expense_tracker/features/auth/domain/usecase/logout_user.dart';
+import 'package:personal_expense_tracker/features/auth/domain/usecase/signup_user.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/providers/auth_provider.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/screens/login_screen.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/screens/signup_screen.dart';
 import 'package:personal_expense_tracker/features/budget/data/datasource/budget_local_datasource.dart';
 import 'package:personal_expense_tracker/features/budget/data/repositories/budget_repository_impl.dart';
 import 'package:personal_expense_tracker/features/budget/domain/usecase/get_budget.dart';
@@ -18,9 +27,7 @@ import 'core/navigation/app_routes.dart';
 import 'core/widgets/main_navigation.dart';
 import 'core/theme/app_theme.dart';
 
-import 'features/auth/auth_gate.dart';
-import 'features/auth/login_screen.dart';
-import 'features/auth/signup_screen.dart';
+import 'features/auth/presentation/providers/auth_gate.dart';
 
 import 'features/transaction/data/datasources/transaction_local_datasource.dart';
 import 'features/transaction/data/repositories/transaction_repository_impl.dart';
@@ -42,6 +49,14 @@ void main() {
   final getBudgetUseCase = GetBudget(BudgetRepository);
   final setBudgetUseCase = SetBudget(BudgetRepository);
 
+  final authLocalDataSource = AuthLocalDatasourceImpl();
+  final authRepository = AuthRepositoryImpl(authLocalDataSource);
+
+  final loginUser = LoginUser(authRepository);
+  final signupUser = SignupUser(authRepository);
+  final logoutUser = LogoutUser(authRepository);
+  final getCurrentUser = GetCurrentUser(authRepository);
+
   runApp(
     MultiProvider(
       providers: [
@@ -53,6 +68,15 @@ void main() {
             updateTransactionUsecase: updateTransactionUseCase,
           )..load(),
         ),
+
+    ChangeNotifierProvider(
+      create: (_) => AuthProvider(
+        loginUser: loginUser,
+        signupUser: signupUser,
+        logoutUser: logoutUser,
+        getCurrentUser: getCurrentUser,
+      )..checkAuth(),
+    ),
 
         ChangeNotifierProvider(
           create: (_)=> BudgetProvider(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/features/budget/presentation/screen/budget_screen.dart';
-import 'package:personal_expense_tracker/features/dashboard/dashboard_screen.dart';
+import 'package:personal_expense_tracker/features/dashboard/screens/dashboard_screen.dart';
 import 'package:personal_expense_tracker/features/profile/profile_screen.dart';
 import 'package:personal_expense_tracker/features/transaction/presentation/screen/transaction_screen.dart';
 

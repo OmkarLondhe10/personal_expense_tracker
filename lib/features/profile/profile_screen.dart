@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import '../transaction/presentation/providers/app_settings_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/core/widgets/main_navigation.dart';
-import 'package:personal_expense_tracker/features/auth/login_screen.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/screens/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthGate extends StatefulWidget {

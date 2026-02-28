@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
-import 'package:personal_expense_tracker/features/auth/login_screen.dart';
+import 'package:personal_expense_tracker/features/auth/presentation/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
