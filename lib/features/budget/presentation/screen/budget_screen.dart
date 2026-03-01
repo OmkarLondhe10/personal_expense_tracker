@@ -85,6 +85,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 const SizedBox(width: 10),
 
                 ElevatedButton(
+
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all(
+                      Theme.of(context).colorScheme.tertiary,
+                    )
+                  ),
+
                   onPressed: () {
                     final amount =
                         double.tryParse(

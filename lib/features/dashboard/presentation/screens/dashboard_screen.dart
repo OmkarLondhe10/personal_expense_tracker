@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expense_tracker/features/transaction/presentation/providers/transaction_provider.dart';
+import 'package:personal_expense_tracker/features/dashboard/presentation/provider/dashboard_provider.dart';
 import 'package:personal_expense_tracker/features/transaction/presentation/widget/transaction_tile.dart';
 import 'package:provider/provider.dart';
 
@@ -9,12 +9,13 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final provider = context.watch<TransactionProvider>();
+    final provider = context.watch<DashboardProvider>();
+    final summary = provider.summary;
+    final income = summary?.totalIncome ?? 0;
+    final expense = summary?.totalExpense;
+    final balance = summary?.balance;
+    final recent = summary?.recentTransactions ?? [];
 
-    final income = provider.totalIncome;
-    final expense = provider.totalExpense;
-    final balance = provider.balance;
-    final recent = provider.recentTransactions;
     
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +37,7 @@ class DashboardScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text('\$${balance.toStringAsFixed(2)}',
+                    Text('\$${balance?.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -84,7 +85,7 @@ class DashboardScreen extends StatelessWidget {
                         const Text('Expense'),
                         const SizedBox(height: 6),
                         Text(
-                          '\$${expense.toStringAsFixed(2)}',
+                          '\$${expense?.toStringAsFixed(2)}',
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.error,
                             fontWeight: FontWeight.bold,

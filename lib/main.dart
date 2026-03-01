@@ -14,6 +14,9 @@ import 'package:personal_expense_tracker/features/budget/data/repositories/budge
 import 'package:personal_expense_tracker/features/budget/domain/usecase/get_budget.dart';
 import 'package:personal_expense_tracker/features/budget/domain/usecase/set_budget.dart';
 import 'package:personal_expense_tracker/features/budget/presentation/provider/budget_provider.dart';
+import 'package:personal_expense_tracker/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:personal_expense_tracker/features/dashboard/domain/usecase/get_dashboard_summary.dart';
+import 'package:personal_expense_tracker/features/dashboard/presentation/provider/dashboard_provider.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/add_transaction.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/delete_transaction.dart';
 import 'package:personal_expense_tracker/features/transaction/domain/usecases/get_transaction.dart';
@@ -57,6 +60,13 @@ void main() {
   final logoutUser = LogoutUser(authRepository);
   final getCurrentUser = GetCurrentUser(authRepository);
 
+  final dashboardRepository = DashboardRepositoryImpl(
+    transactionRepository: repository,
+    budgetRepository: BudgetRepository,
+  );
+
+  final getDashboardSummary = GetDashboardSummary(dashboardRepository);
+
   runApp(
     MultiProvider(
       providers: [
@@ -68,6 +78,10 @@ void main() {
             updateTransactionUsecase: updateTransactionUseCase,
           )..load(),
         ),
+
+      ChangeNotifierProvider(
+        create: (_) => DashboardProvider(getDashboardSummary)..load()
+      ),
 
     ChangeNotifierProvider(
       create: (_) => AuthProvider(
