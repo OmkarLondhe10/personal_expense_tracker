@@ -45,8 +45,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.home: (_) => const MainNavigation(),
         AppRoutes.login: (_) => const LoginScreen(),
         AppRoutes.signup: (_) => const SignupScreen(),
-        AppRoutes.addTransaction: (_) =>
-            const AddTransactionScreen(),
+        AppRoutes.addTransaction: (_) => const AddTransactionScreen(),
       },
 
       themeMode:

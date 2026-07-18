@@ -3,6 +3,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/transaction_model.dart';
 
 class TransactionProvider extends ChangeNotifier{
+
+  TransactionProvider(){ 
+  load();
+}
+
 final List<TransactionModel> _transactions = [];
 static const _storagekey = 'transactions';
 
@@ -17,6 +22,7 @@ static const _storagekey = 'transactions';
   void deleteTransaction(int id){
     _transactions.removeWhere((t)=> t.id == id);
     _save();
+    notifyListeners();
   }
 
   void updateTransaction(TransactionModel updated){
@@ -40,26 +46,29 @@ static const _storagekey = 'transactions';
     notifyListeners();
   }
 
-  
-  Future<void> load() async {
-    final prefs = await SharedPreferences.getInstance();
-    final data = prefs.getStringList(_storagekey);
+    Future<void> load() async {
+      final prefs = await SharedPreferences.getInstance();
+      final data = prefs.getStringList(_storagekey);
 
-  if (data != null){
-    _transactions.clear();
-    _transactions.addAll(
-      data.map((e) => TransactionModel.fromJson((e).toString()),
-      )
-    );
-  notifyListeners();
-  }
-}
+      print("Loaded: ${data?.length ?? 0} transactions");
+
+      _transactions.clear();
+
+      if (data != null) {
+        _transactions.addAll(
+          data.map((e) => TransactionModel.fromJson(e)),
+        );
+      }
+
+      notifyListeners();
+    }
 
 Future<void> _save() async{
   final prefs = await SharedPreferences.getInstance();
   final data = _transactions.map((e)=> e.toJson()).toList();
+  print('Saving ${data.length} transactions');
   await prefs.setStringList(_storagekey, data);
-  }
+}
 
 double get totalIncome => 
   _transactions.where((t)=> t.isIncome).fold(0, (sum,t)=>sum+t.amount);
