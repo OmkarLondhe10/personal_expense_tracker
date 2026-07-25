@@ -18,6 +18,7 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   late List<String> categories;
   bool isIncome = false;
   String category = 'Food';
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState(){
@@ -31,12 +32,13 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       'Other'
     ];
   
-      final tx = widget.transaction;
+    final tx = widget.transaction;
   
-      if(tx != null){
-        _amountController.text = tx.amount.toString();
-        isIncome = tx.isIncome;
-        category = tx.category;
+    if(tx != null){
+      _amountController.text = tx.amount.toString();
+      isIncome = tx.isIncome;
+      category = tx.category;
+      selectedDate = tx.date;
   
     if(!categories.contains(category)){
       categories.add(category);

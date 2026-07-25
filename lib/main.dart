@@ -1,18 +1,25 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:personal_expense_tracker/core/navigation/app_routes.dart';
 import 'package:personal_expense_tracker/core/widgets/main_navigation.dart' show MainNavigation;
 import 'package:personal_expense_tracker/features/auth/auth_gate.dart';
 import 'package:personal_expense_tracker/features/auth/login_screen.dart';
 import 'package:personal_expense_tracker/features/auth/signup_screen.dart';
 import 'package:personal_expense_tracker/features/transaction/screen/add_transaction.dart';
+import 'package:personal_expense_tracker/firebase_options.dart';
 import 'package:personal_expense_tracker/provider/app_settings_provider.dart';
+import 'package:personal_expense_tracker/provider/auth_provider.dart';
 import 'package:personal_expense_tracker/provider/transaction_provider.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 
-void main() {
-  setUrlStrategy(PathUrlStrategy());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     MultiProvider(
       providers: [
@@ -21,6 +28,9 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (_) => AppSettingsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
         ),
       ],
       child: const MyApp(),
