@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../provider/app_settings_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,25 +9,40 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<AppSettingsProvider>();
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Profile")),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-
-          const CircleAvatar(
+          CircleAvatar(
             radius: 40,
-            child: Icon(Icons.person, size: 40),
+            backgroundImage: user?.photoURL != null
+                ? NetworkImage(user!.photoURL!)
+                : null,
+            child: user?.photoURL == null
+                ? const Icon(Icons.person, size: 40)
+                : null,
           ),
           const SizedBox(height: 10),
-          const Center(
+          Center(
             child: Text(
-              "John Doe",
-              style:
-                  TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              user?.displayName?.isNotEmpty == true
+                  ? user!.displayName!
+                  : (user?.email ?? "No Name"),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
+          if (user?.email != null) ...[
+            const SizedBox(height: 4),
+            Center(
+              child: Text(
+                user!.email!,
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+            ),
+          ],
           const SizedBox(height: 30),
 
           SwitchListTile(
@@ -60,16 +74,7 @@ class ProfileScreen extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             onPressed: () async {
-              final prefs =
-                  await SharedPreferences.getInstance();
-              await prefs.remove('loggedIn');
-
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (_) => const LoginScreen()),
-                (route) => false,
-              );
+              await FirebaseAuth.instance.signOut();
             },
             icon: const Icon(Icons.logout),
             label: const Text("Logout"),
